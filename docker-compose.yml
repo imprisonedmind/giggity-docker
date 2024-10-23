@@ -1,5 +1,4 @@
 # docker-compose.yml
-version: '3.8'
 
 services:
   mongodb:
@@ -7,26 +6,27 @@ services:
     container_name: mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      #      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      #      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: gigs
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     networks:
       - app_network
 
   api:
     build:
-      context: ./api
-      dockerfile: Dockerfile
+      context: https://github.com/${GITHUB_USERNAME}/giggity-bun-api.git#main
     container_name: bun_api
     restart: always
     ports:
-      - "3001:3001"
+      - "8080:8080"
     environment:
-      - MONGODB_URI=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017
-      - PORT=3001
+      - MONGODB_URI=mongodb://localhost:27017
+      - PORT=8080
     depends_on:
       - mongodb
     networks:
@@ -34,14 +34,13 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: https://github.com/${GITHUB_USERNAME}/giggityv2.git#main
     container_name: nextjs_frontend
     restart: always
     ports:
       - "3000:3000"
     environment:
-      - API_URL=http://api:3001
+      - API_URL=http://api:8080
     depends_on:
       - api
     networks:
