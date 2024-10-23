@@ -3,7 +3,8 @@
 services:
   mongodb:
     image: mongo:latest
-    container_name: mongodb
+#    container_name: mongodb
+    container_name: mongodb-test
     restart: always
     environment:
       #      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
@@ -20,12 +21,16 @@ services:
   api:
     build:
       context: https://github.com/${GITHUB_USERNAME}/giggity-bun-api.git#main
+#      args:
+#        - MONGODB_URI=mongodb://mongodb:27017
     container_name: bun_api
     restart: always
     ports:
       - "8080:8080"
+    env_file:
+      - .env.bun
     environment:
-      - MONGODB_URI=mongodb://localhost:27017
+#      - MONGODB_URI=mongodb://mongodb:27017
       - PORT=8080
     depends_on:
       - mongodb
@@ -35,14 +40,16 @@ services:
   frontend:
     build:
       context: https://github.com/${GITHUB_USERNAME}/giggityv2.git#main
-      args:
-        - API_URL=http://api:8080
+#      args:
+#        - API_URL=http://api:8080
     container_name: nextjs_frontend
     restart: always
     ports:
       - "3000:3000"
-    environment:
-      - API_URL=http://api:8080
+    env_file:
+      - .env.nextjs
+#    environment:
+    #      - API_URL=http://api:8080
     depends_on:
       - api
     networks:

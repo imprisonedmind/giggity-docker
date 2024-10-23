@@ -23,10 +23,11 @@ their images. This is intended to be used on a VPS and easily deployable.
     ```
 3. Backup just the gigs database:
    ```bash
-   docker exec mongodb sh -c 'mongodump --db gigs --archive' > gigs_backup.archive
+   docker exec mongodb-test sh -c 'mongodump --db gigs --archive' > gigs_backup.archive
    ```
 
 4. Restore just the gigs database:
    ```bash
-   docker exec -i mongodb sh -c 'mongorestore --db gigs --archive' < gigs_backup.archive
+   docker exec -i mongodb-test sh -c 'mongorestore --db gigs --archive' < gigs_backup. 
+   archive
    ```
