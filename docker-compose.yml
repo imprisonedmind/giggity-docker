@@ -35,6 +35,8 @@ services:
   frontend:
     build:
       context: https://github.com/${GITHUB_USERNAME}/giggityv2.git#main
+      args:
+        - API_URL=http://api:8080
     container_name: nextjs_frontend
     restart: always
     ports:
