@@ -1,14 +1,14 @@
 # giggity-docker
+
 This is the parent docker setup that pulls the respective repos and builds
 their images. This is intended to be used on a VPS and easily deployable.
 
-
 ## Getting Started
+
 1. Pull the Docker images:
    ```bash
    docker pull
    ```
-
 
 ## Sorting out MongoDB
 
@@ -30,4 +30,12 @@ their images. This is intended to be used on a VPS and easily deployable.
    ```bash
    docker exec -i mongodb-test sh -c 'mongorestore --db gigs --archive' < gigs_backup. 
    archive
+   ```
+
+## Getting Certbot SSL certificates
+
+1. Before starting the services, you'll need to get your initial SSL certificate:
+   ```bash 
+   docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot 
+   -d giggity.co.za
    ```
